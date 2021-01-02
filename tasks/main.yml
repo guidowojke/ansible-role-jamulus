@@ -2,8 +2,8 @@
 # Install packages needed by jamulus
 - name: Install the list of packages for jamulus
   apt:
-    autoclean: yes
-    autoremove: yes
+    autoclean: true
+    autoremove: true
     state: present
     pkg:
       - build-essential
