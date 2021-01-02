@@ -78,6 +78,7 @@
     name: "{{ jamulus_service }}"
     state: stopped
   when: jamulus_build
+  ignore_errors: true  # if service is not present
   notify:
     - restart jamulus server
   become: true
