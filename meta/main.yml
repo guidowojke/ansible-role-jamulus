@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: jamulus_docker
+  author: guidowojke
+  description: configure and start jamulus container for Linux.
+  company: "---"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic    # ubuntu1804
+        - focal     # ubuntu2004
+  galaxy_tags:
+    - web
+    - containers
+    - docker
+    - orchestration
+    - compose
+    - server
