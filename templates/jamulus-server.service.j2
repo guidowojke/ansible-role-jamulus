@@ -16,7 +16,7 @@ Nice=-20
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
 
-ExecStart=/bin/bash -c '/usr/local/bin/Jamulus --port 22124 --server --multithreading --nogui --log /var/log/jamulus/jamulus.log --welcomemessage "{{ jamulus_welcomemessage }}" --centralserver localhost --serverinfo "{{ jamulus_serverinfo }}"'
+ExecStart=/bin/bash -c '/usr/local/bin/Jamulus --server --multithreading --nogui --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo }}" --numchannels {{ jamulus_numchannels }}'
 
 StandardOutput=journal
 StandardError=inherit
