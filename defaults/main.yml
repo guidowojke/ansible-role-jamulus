@@ -1,6 +1,7 @@
 ---
 jamulus_version: "3.6.2"
 jamulus_port: "22124"
+jamulus_build: true
 jamulus_timezone: "America/Los_Angeles"
 jamulus_release_version: "r{{ jamulus_version | regex_replace('\\.', '_') }}"
 jamulus_username: "jamulus"
