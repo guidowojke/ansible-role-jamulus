@@ -64,14 +64,16 @@
   become: true
 
 # sources from jamulus
-- git:
+- name: checkout jamulus version from github
+  git:
     repo: 'https://github.com/corrados/jamulus/'
     dest: "{{ jamulus_folder }}/jamulus-git"
     version: "{{ jamulus_release_version }}"
   become: true
 
 # stop server
-- systemd:
+- name: stop jamulus service before building jamulus
+  systemd:
     name: "{{ jamulus_service }}"
     state: stopped
   when: jamulus_build
