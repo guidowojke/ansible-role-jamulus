@@ -73,13 +73,13 @@
   become: true
 
 # stop server
-- name: stop jamulus service before building jamulus
-  systemd:
-    name: "{{ jamulus_service }}"
-    state: stopped
-  when: jamulus_build
-  ignore_errors: true  # if service is not present
-  become: true
+#- name: stop jamulus service before building jamulus
+#  systemd:
+#    name: "{{ jamulus_service }}"
+#    state: stopped
+#  when: jamulus_build
+#  ignore_errors: true  # if service is not present
+#  become: true
 
 # all build commands
 # qmake
@@ -109,6 +109,8 @@
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
+  notify:
+    - restart jamulus server
   become: true
 
 - name: "copy executable to versioned binary folder"
@@ -119,6 +121,8 @@
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
     mode: 0755
+  notify:
+    - restart jamulus server
   become: true
 
 # added service script
