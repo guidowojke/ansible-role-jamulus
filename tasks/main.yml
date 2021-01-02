@@ -28,8 +28,8 @@
     name: "{{ jamulus_username }}"
     comment: JamulusServer
     group: "{{ jamulus_username }}"
-    system: yes
-    create_home: no
+    system: true
+    create_home: false
     shell: /sbin/nologin
   become: true
 
@@ -130,7 +130,7 @@
 
 - name: restart jamulus server if config was changed
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: "{{ jamulus_service }}"
     state: restarted
   become: true
