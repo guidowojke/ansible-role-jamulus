@@ -6,21 +6,21 @@
     autoremove: yes
     state: present
     pkg:
-    - build-essential
-    - qt5-qmake
-    - qtdeclarative5-dev
-    - qt5-default
-    - qttools5-dev-tools
-    # - libjack-jackd2-dev
-    # - qjackctl
-  become: yes
+      - build-essential
+      - qt5-qmake
+      - qtdeclarative5-dev
+      - qt5-default
+      - qttools5-dev-tools
+      # - libjack-jackd2-dev
+      # - qjackctl
+  become: true
 
 # Add jamulus group
 - name: "Ensure group {{ jamulus_username }} exists"
   group:
     name: "{{ jamulus_username }}"
     state: present
-  become: yes
+  become: true
 
 # Add jamulus user   
 - name: "Add the user {{ jamulus_username }}" 
@@ -31,7 +31,7 @@
     system: yes
     create_home: no
     shell: /sbin/nologin
-  become: yes
+  become: true
 
 # create jamulus log folder
 - name: create jamulus log directory
@@ -41,7 +41,7 @@
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
     mode: '0755'
-  become: yes
+  become: true
 
 # create jamulus opt folder with correct owner
 - name: create jamulus opt directory
@@ -51,7 +51,7 @@
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
     mode: '0755'
-  become: yes
+  become: true
 
 # create jamulus server folder
 - name: Create jamulus server directory
@@ -61,21 +61,21 @@
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
     mode: '0755'
-  become: yes
+  become: true
 
 # sources from jamulus
 - git:
     repo: 'https://github.com/corrados/jamulus/'
     dest: "{{ jamulus_folder }}/jamulus-git"
     version: "{{ jamulus_release_version }}"
-  become: yes
+  become: true
 
 # stop server
 - systemd:
     name: "{{ jamulus_service }}"
     state: stopped
   when: jamulus_build
-  become: yes
+  become: true
   register: stopped_jamulus_server
 
 # all build commandd
@@ -85,28 +85,28 @@
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
-  become: yes
+  become: true
 # make clean
 - name: "[BUILD] make clean" 
   command: make clean
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
-  become: yes
+  become: true
 # make
 - name: "[BUILD] make"
   command: make 
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
-  become: yes
+  become: true
 # make install
 - name: "[BUILD] make install"
   command: make install
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
-  become: yes
+  become: true
 
 - name: "copy executable to versioned binary folder"
   copy:
@@ -125,7 +125,7 @@
     owner: "root"
     group: "root"
     mode: 0644
-  become: yes
+  become: true
   register: jamulus_server_script
 
 - name: restart jamulus server if config was changed
@@ -133,6 +133,6 @@
     daemon_reload: yes
     name: "{{ jamulus_service }}"
     state: restarted
-  become: yes
+  become: true
   when: jamulus_server_script.changed or stopped_jamulus_server.changed
 
