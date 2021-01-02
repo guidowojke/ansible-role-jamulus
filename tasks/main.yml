@@ -1,0 +1,147 @@
+---
+# change config.txt (hdmi_force_hotplug=0) 
+- name: disable htmi_force_hotplug in config.txt
+  lineinfile:
+    path: /boot/config.txt
+    state: present
+    regexp: '^.*hdmi_force_hotplug=.*'
+    line: 'hdmi_force_hotplug=0'
+  become: yes
+
+# Install packages needed by jamulus
+- name: Install the list of packages for jamulus
+  apt:
+    autoclean: yes
+    autoremove: yes
+    state: present
+    pkg:
+    - build-essential
+    - qt5-qmake
+    - qtdeclarative5-dev
+    - qt5-default
+    - qttools5-dev-tools
+    # - libjack-jackd2-dev
+    # - qjackctl
+  become: yes
+
+# Add jamulus group
+- name: "Ensure group {{ jamulus_username }} exists"
+  group:
+    name: "{{ jamulus_username }}"
+    state: present
+  become: yes
+
+# Add jamulus user   
+- name: "Add the user {{ jamulus_username }}" 
+  user:
+    name: "{{ jamulus_username }}"
+    comment: JamulusServer
+    group: "{{ jamulus_username }}"
+    system: yes
+    create_home: no
+    shell: /sbin/nologin
+  become: yes
+
+# create jamulus log folder
+- name: create jamulus log directory
+  file:
+    path: "/var/log/jamulus"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: yes
+
+# create jamulus opt folder with correct owner
+- name: create jamulus opt directory
+  file:
+    path: "/opt/jamulus"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: yes
+
+# create jamulus server folder
+- name: Create jamulus server directory
+  file:
+    path: "/opt/jamulus/jamulus-{{ jamulus_server_version }}/bin"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: yes
+
+# sources from jamulus
+- git:
+    repo: 'https://github.com/corrados/jamulus/'
+    dest: "/opt/jamulus/jamulus-git"
+    version: "{{ jamulus_server_version }}"
+  become: yes
+
+# stop server
+- systemd:
+    name: jamulus-server
+    state: stopped
+  when: jamulus_build
+  become: yes
+  register: stopped_jamulus_server
+
+# all build commandd
+# qmake
+- name: "[BUILD] prepare qmake build"
+  command: qmake "CONFIG+=nosound headless" Jamulus.pro
+  args:
+    chdir: "/opt/jamulus/jamulus-git"
+  when: jamulus_build
+  become: yes
+# make clean
+- name: "[BUILD] make clean" 
+  command: make clean
+  args:
+    chdir: "/opt/jamulus/jamulus-git"
+  when: jamulus_build
+  become: yes
+# make
+- name: "[BUILD] make"
+  command: make 
+  args:
+    chdir: "/opt/jamulus/jamulus-git"
+  when: jamulus_build
+  become: yes
+# make install
+- name: "[BUILD] make install"
+  command: make install
+  args:
+    chdir: "/opt/jamulus/jamulus-git"
+  when: jamulus_build
+  become: yes
+
+- name: "copy executable to verioned binary folder"
+  copy:
+    src: "/usr/local/bin/Jamulus"
+    dest: "/opt/jamulus/jamulus-{{ jamulus_server_version }}/bin" 
+    remote_src: true
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+  become: true
+
+# added service script
+- name: create jamulus-server template
+  template:
+    src: jamulus-server.service.j2
+    dest: "/etc/systemd/system/jamulus-server.service"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  become: yes
+  register: jamulus_server_script
+
+- name: restart jamulus server if config was changed
+  systemd:
+    daemon_reload: yes
+    name: jamulus-server
+    state: restarted
+  become: yes
+  when: jamulus_server_script.changed or stopped_jamulus_server.changed
+
