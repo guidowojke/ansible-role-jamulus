@@ -117,6 +117,7 @@
     remote_src: true
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
+    mode: 0755
   become: true
 
 # added service script
