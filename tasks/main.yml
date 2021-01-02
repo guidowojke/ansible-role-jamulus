@@ -1,13 +1,4 @@
 ---
-# change config.txt (hdmi_force_hotplug=0) 
-- name: disable htmi_force_hotplug in config.txt
-  lineinfile:
-    path: /boot/config.txt
-    state: present
-    regexp: '^.*hdmi_force_hotplug=.*'
-    line: 'hdmi_force_hotplug=0'
-  become: yes
-
 # Install packages needed by jamulus
 - name: Install the list of packages for jamulus
   apt:
@@ -45,7 +36,7 @@
 # create jamulus log folder
 - name: create jamulus log directory
   file:
-    path: "/var/log/jamulus"
+    path: "{{ jamulus_log_folder }}"
     state: directory
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
@@ -55,7 +46,7 @@
 # create jamulus opt folder with correct owner
 - name: create jamulus opt directory
   file:
-    path: "/opt/jamulus"
+    path: "{{ jamulus_folder }}"
     state: directory
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
@@ -65,7 +56,7 @@
 # create jamulus server folder
 - name: Create jamulus server directory
   file:
-    path: "/opt/jamulus/jamulus-{{ jamulus_server_version }}/bin"
+    path: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
     state: directory
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
@@ -75,13 +66,13 @@
 # sources from jamulus
 - git:
     repo: 'https://github.com/corrados/jamulus/'
-    dest: "/opt/jamulus/jamulus-git"
-    version: "{{ jamulus_server_version }}"
+    dest: "{{ jamulus_folder }}/jamulus-git"
+    version: "{{ jamulus_release_version }}"
   become: yes
 
 # stop server
 - systemd:
-    name: jamulus-server
+    name: "{{ jamulus_service }}"
     state: stopped
   when: jamulus_build
   become: yes
@@ -92,35 +83,35 @@
 - name: "[BUILD] prepare qmake build"
   command: qmake "CONFIG+=nosound headless" Jamulus.pro
   args:
-    chdir: "/opt/jamulus/jamulus-git"
+    chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
   become: yes
 # make clean
 - name: "[BUILD] make clean" 
   command: make clean
   args:
-    chdir: "/opt/jamulus/jamulus-git"
+    chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
   become: yes
 # make
 - name: "[BUILD] make"
   command: make 
   args:
-    chdir: "/opt/jamulus/jamulus-git"
+    chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
   become: yes
 # make install
 - name: "[BUILD] make install"
   command: make install
   args:
-    chdir: "/opt/jamulus/jamulus-git"
+    chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
   become: yes
 
-- name: "copy executable to verioned binary folder"
+- name: "copy executable to versioned binary folder"
   copy:
     src: "/usr/local/bin/Jamulus"
-    dest: "/opt/jamulus/jamulus-{{ jamulus_server_version }}/bin" 
+    dest: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
     remote_src: true
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
@@ -130,7 +121,7 @@
 - name: create jamulus-server template
   template:
     src: jamulus-server.service.j2
-    dest: "/etc/systemd/system/jamulus-server.service"
+    dest: "/etc/systemd/system/{{ jamulus_service }}.service"
     owner: "root"
     group: "root"
     mode: 0644
@@ -140,7 +131,7 @@
 - name: restart jamulus server if config was changed
   systemd:
     daemon_reload: yes
-    name: jamulus-server
+    name: "{{ jamulus_service }}"
     state: restarted
   become: yes
   when: jamulus_server_script.changed or stopped_jamulus_server.changed

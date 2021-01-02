@@ -10,3 +10,4 @@ jamulus_welcomemessage: "Welcome to the Jamulus Server ({{ jamulus_release_versi
 jamulus_serverinfo: "yourdomain.com({{ jamulus_release_version }});YourCity,YourCountry;CountryCode"
 jamulus_centralserver: "localhost"
 jamulus_numchannels: "50"
+jamulus_service: "jamulus-server"
