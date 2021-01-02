@@ -1,0 +1,26 @@
+[Unit]
+Description=Jamulus-Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User={{ jamulus_username }}
+Group={{ jamulus_username }}
+NoNewPrivileges=true
+ProtectSystem=true
+ProtectHome=true
+Nice=-20
+IOSchedulingClass=realtime
+IOSchedulingPriority=0
+
+ExecStart=/bin/bash -c '/usr/local/bin/Jamulus --port 22124 --server --multithreading --nogui --log /var/log/jamulus/jamulus.log --welcomemessage "{{ jamulus_welcomemessage }}" --centralserver localhost --serverinfo "{{ jamulus_serverinfo }}"'
+
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jamulus
+
+[Install]
+WantedBy=multi-user.target
