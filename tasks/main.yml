@@ -77,10 +77,11 @@
     name: "{{ jamulus_service }}"
     state: stopped
   when: jamulus_build
+  notify:
+    - restart jamulus server
   become: true
-  register: stopped_jamulus_server
 
-# all build commandd
+# all build commands
 # qmake
 - name: "[BUILD] prepare qmake build"
   command: qmake "CONFIG+=nosound headless" Jamulus.pro
@@ -129,12 +130,6 @@
     group: "root"
     mode: 0644
   become: true
-  register: jamulus_server_script
-
-- name: restart jamulus server if config was changed
-  systemd:
-    daemon_reload: true
-    name: "{{ jamulus_service }}"
-    state: restarted
-  become: true
-  when: jamulus_server_script.changed or stopped_jamulus_server.changed
+  notify:
+    - restart jamulus server
+  # register: jamulus_server_script
