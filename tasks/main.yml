@@ -6,6 +6,7 @@
     autoremove: true
     state: present
     pkg:
+      - git  # to checkout the project from github
       - build-essential
       - qt5-qmake
       - qtdeclarative5-dev
