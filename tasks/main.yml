@@ -79,8 +79,6 @@
     state: stopped
   when: jamulus_build
   ignore_errors: true  # if service is not present
-  notify:
-    - restart jamulus server
   become: true
 
 # all build commands
@@ -131,7 +129,7 @@
     owner: "root"
     group: "root"
     mode: 0644
-  become: true
   notify:
     - restart jamulus server
+  become: true
   # register: jamulus_server_script
