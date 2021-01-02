@@ -22,8 +22,8 @@
     state: present
   become: true
 
-# Add jamulus user   
-- name: "Add the user {{ jamulus_username }}" 
+# Add jamulus user
+- name: "Add the user {{ jamulus_username }}"
   user:
     name: "{{ jamulus_username }}"
     comment: JamulusServer
@@ -87,7 +87,7 @@
   when: jamulus_build
   become: true
 # make clean
-- name: "[BUILD] make clean" 
+- name: "[BUILD] make clean"
   command: make clean
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
@@ -95,7 +95,7 @@
   become: true
 # make
 - name: "[BUILD] make"
-  command: make 
+  command: make
   args:
     chdir: "{{ jamulus_folder }}/jamulus-git"
   when: jamulus_build
@@ -135,4 +135,3 @@
     state: restarted
   become: true
   when: jamulus_server_script.changed or stopped_jamulus_server.changed
-
