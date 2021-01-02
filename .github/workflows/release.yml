@@ -6,14 +6,14 @@
 # See: https://github.com/ansible/galaxy/issues/46
 
 name: Release
-on:
+'on':
   push:
     tags:
       - 'v*'
 
 defaults:
   run:
-    working-directory: 'guidowojke.jamulus-docker'
+    working-directory: 'guidowojke.jamulus'
 
 jobs:
 
@@ -34,7 +34,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - completed variables for jamulus docker-compose.yml
+            - completed variables for jamulus server installation
           draft: false
           prerelease: true
 
@@ -45,7 +45,7 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'guidowojke.jamulus-docker'
+          path: 'guidowojke.jamulus'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2

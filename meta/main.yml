@@ -2,9 +2,9 @@
 dependencies: []
 
 galaxy_info:
-  role_name: jamulus_docker
+  role_name: jamulus
   author: guidowojke
-  description: configure and start jamulus container for Linux.
+  description: build, configure and start jamulus for Linux.
   company: "---"
   license: "license (BSD, MIT)"
   min_ansible_version: 2.4
@@ -15,8 +15,4 @@ galaxy_info:
         - focal     # ubuntu2004
   galaxy_tags:
     - web
-    - containers
-    - docker
-    - orchestration
-    - compose
     - server

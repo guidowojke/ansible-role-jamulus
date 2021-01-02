@@ -1,0 +1,139 @@
+---
+# Install packages needed by jamulus
+- name: Install the list of packages for jamulus
+  apt:
+    autoclean: true
+    autoremove: true
+    state: present
+    pkg:
+      - git  # to checkout the project from github
+      - build-essential
+      - qt5-qmake
+      - qtdeclarative5-dev
+      - qt5-default
+      - qttools5-dev-tools
+      # - libjack-jackd2-dev
+      # - qjackctl
+  become: true
+
+# Add jamulus group
+- name: "Ensure group {{ jamulus_username }} exists"
+  group:
+    name: "{{ jamulus_username }}"
+    state: present
+  become: true
+
+# Add jamulus user
+- name: "Add the user {{ jamulus_username }}"
+  user:
+    name: "{{ jamulus_username }}"
+    comment: JamulusServer
+    group: "{{ jamulus_username }}"
+    system: true
+    create_home: false
+    shell: /sbin/nologin
+  become: true
+
+# create jamulus log folder
+- name: create jamulus log directory
+  file:
+    path: "{{ jamulus_log_folder }}"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: true
+
+# create jamulus opt folder with correct owner
+- name: create jamulus opt directory
+  file:
+    path: "{{ jamulus_folder }}"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: true
+
+# create jamulus server folder
+- name: Create jamulus server directory
+  file:
+    path: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: true
+
+# sources from jamulus
+- name: checkout jamulus version from github
+  git:
+    repo: 'https://github.com/corrados/jamulus/'
+    dest: "{{ jamulus_folder }}/jamulus-git"
+    version: "{{ jamulus_release_version }}"
+  become: true
+
+# stop server
+#- name: stop jamulus service before building jamulus
+#  systemd:
+#    name: "{{ jamulus_service }}"
+#    state: stopped
+#  when: jamulus_build
+#  ignore_errors: true  # if service is not present
+#  become: true
+
+# all build commands
+# qmake
+- name: "[BUILD] prepare qmake build"
+  command: qmake "CONFIG+=nosound headless" Jamulus.pro
+  args:
+    chdir: "{{ jamulus_folder }}/jamulus-git"
+  when: jamulus_build
+  become: true
+# make clean
+- name: "[BUILD] make clean"
+  command: make clean
+  args:
+    chdir: "{{ jamulus_folder }}/jamulus-git"
+  when: jamulus_build
+  become: true
+# make
+- name: "[BUILD] make"
+  command: make
+  args:
+    chdir: "{{ jamulus_folder }}/jamulus-git"
+  when: jamulus_build
+  become: true
+# make install
+- name: "[BUILD] make install"
+  command: make install
+  args:
+    chdir: "{{ jamulus_folder }}/jamulus-git"
+  when: jamulus_build
+  notify:
+    - restart jamulus server
+  become: true
+
+- name: "copy executable to versioned binary folder"
+  copy:
+    src: "/usr/local/bin/Jamulus"
+    dest: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
+    remote_src: true
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: 0755
+  notify:
+    - restart jamulus server
+  become: true
+
+# added service script
+- name: create jamulus-server template
+  template:
+    src: jamulus-server.service.j2
+    dest: "/etc/systemd/system/{{ jamulus_service }}.service"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - restart jamulus server
+  become: true
+  # register: jamulus_server_script

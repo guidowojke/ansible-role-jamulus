@@ -1,0 +1,7 @@
+---
+- name: restart jamulus server
+  systemd:
+    daemon_reload: true
+    name: "{{ jamulus_service }}"
+    state: restarted
+  become: true

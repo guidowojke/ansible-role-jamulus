@@ -3,11 +3,6 @@
   hosts: all
   become: true
 
-  vars:
-    docker_install_compose: true
-    docker_compose_version: "1.26.0"
-    jamulus_container_start: false
-
   pre_tasks:
     - name: Update apt cache.
       apt: update_cache=yes cache_valid_time=600
@@ -26,5 +21,4 @@
       failed_when: systemctl_status.rc > 1
 
   roles:
-    - role: geerlingguy.docker
-    - role: guidowojke.jamulus-docker
+    - role: guidowojke.jamulus

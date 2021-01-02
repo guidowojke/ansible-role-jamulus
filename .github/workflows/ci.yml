@@ -10,7 +10,7 @@ name: CI
 
 defaults:
   run:
-    working-directory: 'guidowojke.jamulus-docker'
+    working-directory: 'guidowojke.jamulus'
 
 jobs:
 
@@ -21,7 +21,7 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'guidowojke.jamulus-docker'
+          path: 'guidowojke.jamulus'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
@@ -49,7 +49,7 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'guidowojke.jamulus-docker'
+          path: 'guidowojke.jamulus'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
@@ -73,6 +73,8 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
+        with:
+          path: 'guidowojke.jamulus'
 
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
