@@ -34,9 +34,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - completed variables for jamulus server installation
+            - First final release to create server structure for jamulus
           draft: false
-          prerelease: true
+          prerelease: false
 
   galaxy-release:
     name: Release
