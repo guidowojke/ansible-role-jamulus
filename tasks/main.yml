@@ -67,7 +67,7 @@
 # sources from jamulus
 - name: checkout jamulus version from github
   git:
-    repo: 'https://github.com/corrados/jamulus/'
+    repo: 'https://github.com/jamulussoftware/jamulus/'
     dest: "{{ jamulus_folder }}/jamulus-git"
     version: "{{ jamulus_release_version }}"
   become: true
