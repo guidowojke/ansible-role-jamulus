@@ -3,7 +3,7 @@
 
     <groupId>de.guidowojke.ansible.roles.jamulus</groupId>
     <artifactId>jamulus</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <scm>
         <url>https://github.com/guidowojke/ansible-role-jamulus</url>
