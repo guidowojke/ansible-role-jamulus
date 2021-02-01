@@ -55,9 +55,9 @@
   become: true
 
 # create jamulus server folder
-- name: Create jamulus server directory
+- name: Create jamulus server bin directory
   file:
-    path: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
+    path: "{{ jamulus_bin_folder }}"
     state: directory
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"
@@ -67,7 +67,7 @@
 # sources from jamulus
 - name: checkout jamulus version from github
   git:
-    repo: 'https://github.com/corrados/jamulus/'
+    repo: 'https://github.com/jamulussoftware/jamulus/'
     dest: "{{ jamulus_folder }}/jamulus-git"
     version: "{{ jamulus_release_version }}"
   become: true
@@ -116,7 +116,7 @@
 - name: "copy executable to versioned binary folder"
   copy:
     src: "/usr/local/bin/Jamulus"
-    dest: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
+    dest: "{{ jamulus_bin_folder }}"
     remote_src: true
     owner: "{{ jamulus_username }}"
     group: "{{ jamulus_username }}"

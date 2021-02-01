@@ -34,7 +34,8 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - First final release to create server structure for jamulus
+            - changed github url for jamulus
+            - introduced new variables to install multiple jamulus instances on one server
           draft: false
           prerelease: false
 
