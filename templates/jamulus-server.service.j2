@@ -20,7 +20,7 @@ ExecStart=/bin/bash -c '/usr/local/bin/Jamulus --server --multithreading --nogui
 
 StandardOutput=journal
 StandardError=inherit
-SyslogIdentifier=jamulus
+SyslogIdentifier={{ jamulus_username }}
 
 [Install]
 WantedBy=multi-user.target
