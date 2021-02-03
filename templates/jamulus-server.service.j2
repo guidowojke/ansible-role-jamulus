@@ -16,11 +16,11 @@ Nice=-20
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
 
-ExecStart=/bin/bash -c '/usr/local/bin/Jamulus --server --multithreading --nogui {{ jamulus_fastupdate_options }}--port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo }}" --numchannels {{ jamulus_numchannels }}'
+ExecStart=/bin/bash -c '{{ jamulus_bin_folder }}/Jamulus --server --multithreading --nogui {{ jamulus_fastupdate_options }} --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo }}" --numchannels {{ jamulus_numchannels }}'
 
 StandardOutput=journal
 StandardError=inherit
-SyslogIdentifier=jamulus
+SyslogIdentifier={{ jamulus_username }}
 
 [Install]
 WantedBy=multi-user.target
