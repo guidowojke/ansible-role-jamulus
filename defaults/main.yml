@@ -15,3 +15,15 @@ jamulus_centralserver: "localhost"
 jamulus_numchannels: "50"
 jamulus_service: "{{ jamulus_username }}-server"
 jamulus_recording: false
+jamulus_logrotate:
+  - name: "log-rotate-{{ jamulus_service }}"
+    definitions:
+      - logs:
+        - "{{ jamulus_log_folder }}/jamulus.log"
+        options:
+          - rotate 21
+          - daily
+          - missingok
+          - ifempty
+          - compress
+          - nomail
