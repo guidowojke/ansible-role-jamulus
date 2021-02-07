@@ -7,6 +7,7 @@
     state: present
     pkg:
       - git  # to checkout the project from github
+      - logrotate  # for logrotation of jamulus.log
       - build-essential
       - qt5-qmake
       - qtdeclarative5-dev
@@ -73,7 +74,7 @@
   become: true
 
 # stop server
-#- name: stop jamulus service before building jamulus
+# - name: stop jamulus service before building jamulus
 #  systemd:
 #    name: "{{ jamulus_service }}"
 #    state: stopped
@@ -137,3 +138,14 @@
     - restart jamulus server
   become: true
   # register: jamulus_server_script
+
+- name: create logrotate jamulus configuration files
+  become: true
+  template:
+    src: 'jamulus-logrotate.j2'
+    dest: '/etc/logrotate.d/{{ item.name }}'
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - '{{ jamulus_logrotate }}'

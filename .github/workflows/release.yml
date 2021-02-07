@@ -34,8 +34,8 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - changed github url for jamulus
-            - introduced new variables to install multiple jamulus instances on one server
+            - added logrotate
+            - fixed issue #1 (problem with unqoted ' in welcome message)
           draft: false
           prerelease: false
 
