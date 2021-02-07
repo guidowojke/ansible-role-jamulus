@@ -14,3 +14,4 @@ jamulus_serverinfo: "yourdomain.com({{ jamulus_release_version }});YourCity,Your
 jamulus_centralserver: "localhost"
 jamulus_numchannels: "50"
 jamulus_service: "{{ jamulus_username }}-server"
+jamulus_recording: false
