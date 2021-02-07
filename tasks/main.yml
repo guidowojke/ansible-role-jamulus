@@ -74,7 +74,7 @@
   become: true
 
 # stop server
-#- name: stop jamulus service before building jamulus
+# - name: stop jamulus service before building jamulus
 #  systemd:
 #    name: "{{ jamulus_service }}"
 #    state: stopped

@@ -19,7 +19,7 @@ jamulus_logrotate:
   - name: "log-rotate-{{ jamulus_service }}"
     definitions:
       - logs:
-        - "{{ jamulus_log_folder }}/jamulus.log"
+          - "{{ jamulus_log_folder }}/jamulus.log"
         options:
           - rotate 21
           - daily
