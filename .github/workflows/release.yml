@@ -35,6 +35,7 @@ jobs:
           body: |
             Changes in this Release
             - added logrotate
+            - fixed issue #1 (problem with unqoted ' in welcome message)
           draft: false
           prerelease: false
 
