@@ -34,8 +34,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - added logrotate
-            - fixed issue #1 (problem with unqoted ' in welcome message)
+            - added fastupdate option (thanks to @declension)
           draft: false
           prerelease: false
 
