@@ -45,6 +45,16 @@
     mode: '0755'
   become: true
 
+# create jamulus logrotate folder
+- name: create jamulus logrotate directory
+  file:
+    path: "{{ jamulus_logrotate_folder }}"
+    state: directory
+    owner: "{{ jamulus_username }}"
+    group: "{{ jamulus_username }}"
+    mode: '0755'
+  become: true
+
 # create jamulus opt folder with correct owner
 - name: create jamulus opt directory
   file:
@@ -147,5 +157,7 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - restart jamulus server
   with_items:
     - '{{ jamulus_logrotate }}'

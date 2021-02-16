@@ -34,7 +34,8 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - added fastupdate option (thanks to @declension)
+            - changed logrotation config
+            - introduced logrotation folder for rotated logs
           draft: false
           prerelease: false
 
