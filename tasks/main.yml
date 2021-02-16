@@ -157,5 +157,7 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - restart jamulus server
   with_items:
     - '{{ jamulus_logrotate }}'
