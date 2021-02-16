@@ -22,8 +22,8 @@ IOSchedulingPriority=0
 
 ExecStart=/bin/bash -c '{{ jamulus_bin_folder }}/Jamulus --server --multithreading --nogui {{ jamulus_fastupdate_options }} --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage | replace("'","\\'") }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo | replace("'","\\'") }}" --numchannels {{ jamulus_numchannels }}'
 
-StandardOutput=file:{{ jamulus_log_folder }}/{{ jamulus_service }}.log
-StandardError=file:{{ jamulus_log_folder }}/{{ jamulus_service }}.error.log
+StandardOutput=append:{{ jamulus_log_folder }}/{{ jamulus_service }}.log
+StandardError=append:{{ jamulus_log_folder }}/{{ jamulus_service }}.error.log
 SyslogIdentifier={{ jamulus_username }}
 
 [Install]
