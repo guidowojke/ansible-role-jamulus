@@ -9,6 +9,7 @@ jamulus_folder: "/opt/{{ jamulus_username }}"
 jamulus_bin_folder: "{{ jamulus_folder }}/jamulus-{{ jamulus_release_version }}/bin"
 jamulus_recording_folder: "/opt/{{ jamulus_username }}-rec"
 jamulus_log_folder: "/var/log/{{ jamulus_username }}"
+jamulus_logrotate_folder: "{{ jamulus_log_folder }}/old"
 jamulus_welcomemessage: "Welcome to the Jamulus Server ({{ jamulus_version }})"
 jamulus_serverinfo: "yourdomain.com({{ jamulus_release_version }});YourCity,YourCountry;CountryCode"
 jamulus_centralserver: "localhost"
@@ -29,3 +30,6 @@ jamulus_logrotate:
           - ifempty
           - compress
           - nomail
+          - dateext
+          - copytruncate
+          - olddir {{ jamulus_logrotate_folder }}
