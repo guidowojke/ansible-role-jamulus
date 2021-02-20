@@ -16,7 +16,9 @@ Nice=-20
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
 
-ExecStart=/bin/bash -c 'mkdir -p {{ jamulus_log_folder }} && {{ jamulus_bin_folder }}/Jamulus --server --multithreading --nogui --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage | replace("'","\\'") }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo | replace("'","\\'") }}" --numchannels {{ jamulus_numchannels }}'
+ExecStartPre=mkdir -p {{ jamulus_log_folder }}
+ExecStart=/bin/bash -c '{{ jamulus_bin_folder }}/Jamulus --server --multithreading --nogui --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage | replace("'","\\'") }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo | replace("'","\\'") }}" --numchannels {{ jamulus_numchannels }}'
+WorkingDirectory={{ jamulus_bin_folder }}
 
 StandardOutput=journal
 StandardError=inherit
