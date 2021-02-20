@@ -3,6 +3,10 @@ Description=Jamulus-Server
 After=network.target
 StartLimitIntervalSec=0
 
+# Documentation:
+#   https://manpages.ubuntu.com/manpages/cosmic/man5/systemd.service.5.html
+#
+
 [Service]
 Type=simple
 Restart=always
@@ -20,8 +24,8 @@ ExecStartPre=/bin/bash -c 'mkdir -p {{ jamulus_log_folder }}'
 ExecStart=/bin/bash -c '{{ jamulus_bin_folder }}/Jamulus --server --multithreading --nogui --port {{ jamulus_port }} --log {{ jamulus_log_folder }}/jamulus.log --welcomemessage "{{ jamulus_welcomemessage | replace("'","\\'") }}" --centralserver {{ jamulus_centralserver }} --serverinfo "{{ jamulus_serverinfo | replace("'","\\'") }}" --numchannels {{ jamulus_numchannels }}'
 # WorkingDirectory={{ jamulus_bin_folder }}
 
-StandardOutput=journal
-StandardError=inherit
+StandardOutput=append:{{ jamulus_log_folder }}/{{ jamulus_service }}.log
+StandardError=append:{{ jamulus_log_folder }}/{{ jamulus_service }}.error.log
 SyslogIdentifier={{ jamulus_username }}
 
 [Install]
