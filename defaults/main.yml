@@ -16,7 +16,7 @@ jamulus_centralserver: "localhost"
 jamulus_numchannels: "50"
 jamulus_service: "{{ jamulus_username }}-server"
 jamulus_fastupdate: false
-jamulus_fastupdate_options: "{{ '--fastupdate' if jamulus_fastupdate == 'true' else '' }}"
+jamulus_fastupdate_options: "{{ '--fastupdate' if jamulus_fastupdate == true else '' }}"
 jamulus_recording: false
 jamulus_logrotate:
   - name: "log-rotate-{{ jamulus_service }}"
