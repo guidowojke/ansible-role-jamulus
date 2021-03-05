@@ -1,3 +1,7 @@
 *.iml
 .idea
 target
+*.retry
+*/__pycache__
+*.pyc
+.cache
