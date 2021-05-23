@@ -4,4 +4,5 @@
     daemon_reload: true
     name: "{{ jamulus_service }}"
     state: restarted
+    enabled: true
   become: true
